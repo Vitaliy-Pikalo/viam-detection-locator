@@ -22,6 +22,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Create the registry entry if it doesn't exist yet
+        env:
+          KEY_ID: ${{ secrets.VIAM_KEY_ID }}
+          KEY_VALUE: ${{ secrets.VIAM_KEY_VALUE }}
+        run: |
+          curl -fsSL -o viam https://storage.googleapis.com/packages.viam.com/apps/viam-cli/viam-cli-stable-linux-amd64
+          chmod +x viam
+          ./viam login api-key --key-id "$KEY_ID" --key "$KEY_VALUE"
+          ./viam module create --name detection-locator --public-namespace vitaliy-pikalo || echo "module already exists"
+          rm -f viam
       - uses: viamrobotics/build-action@v1
         with:
           version: ${{ github.ref_name }}
