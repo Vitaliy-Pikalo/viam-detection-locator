@@ -1,0 +1,20 @@
+{
+  "$schema": "https://dl.viam.dev/module.schema.json",
+  "module_id": "vitaliy-pikalo:detection-locator",
+  "visibility": "public",
+  "url": "https://github.com/Vitaliy-Pikalo/viam-detection-locator",
+  "description": "Tracks people detected by any vision service across frames and reports each one's ground position in metres relative to the camera.",
+  "models": [
+    {
+      "api": "rdk:component:sensor",
+      "model": "vitaliy-pikalo:detection-locator:locator",
+      "short_description": "Tracked people with flat-ground positions from a camera + vision service"
+    }
+  ],
+  "entrypoint": "bin/detection-locator",
+  "build": {
+    "build": "make module.tar.gz",
+    "path": "module.tar.gz",
+    "arch": ["linux/amd64", "linux/arm64"]
+  }
+}

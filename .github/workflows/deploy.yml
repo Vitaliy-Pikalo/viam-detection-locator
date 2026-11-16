@@ -1,0 +1,30 @@
+# Builds and uploads the module to the Viam registry when a GitHub release is published.
+# Needs repo secrets VIAM_KEY_ID and VIAM_KEY_VALUE (an organization API key from app.viam.com).
+name: deploy
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: stable
+      - run: go mod tidy && go vet ./... && go test ./...
+
+  publish:
+    needs: test
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: viamrobotics/build-action@v1
+        with:
+          version: ${{ github.ref_name }}
+          ref: ${{ github.sha }}
+          key-id: ${{ secrets.VIAM_KEY_ID }}
+          key-value: ${{ secrets.VIAM_KEY_VALUE }}
