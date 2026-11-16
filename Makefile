@@ -7,7 +7,7 @@ test:
 
 $(BIN): go.mod $(shell find . -name '*.go')
 	go mod tidy
-	CGO_ENABLED=0 go build -o $(BIN) ./cmd/module
+	go build -o $(BIN) ./cmd/module
 
 build: $(BIN)
 
